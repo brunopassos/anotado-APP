@@ -18,6 +18,7 @@ import {
   Archivo_600SemiBold
 } from "@expo-google-fonts/archivo"
 import { Login } from "./src/screens/Login";
+import { Register } from "./src/screens/Register";
 
 
 export default function App() {
@@ -44,7 +45,8 @@ export default function App() {
       {/* <AddNote/> */}
       {/* <ViewNote/> */}
       {/* <Home/> */}
-      <Login/>
+      {/* <Login/> */}
+      <Register/>
     </Container>
   );
 }
