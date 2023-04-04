@@ -9,13 +9,15 @@ import {
 
 import { Dashboard } from './src/screens/Dashboard';
 import { AddNote } from "./src/screens/AddNote";
+import { ViewNote } from "./src/screens/ViewNote";
+import { Home } from "./src/screens/Home";
 
 import {
   Archivo_400Regular,
   Archivo_500Medium,
   Archivo_600SemiBold
 } from "@expo-google-fonts/archivo"
-import { ViewNote } from "./src/screens/ViewNote";
+
 
 export default function App() {
 
@@ -39,7 +41,8 @@ export default function App() {
     <Container onLayout={onLayoutRootView}>
       {/* <Dashboard/> */}
       {/* <AddNote/> */}
-      <ViewNote/>
+      {/* <ViewNote/> */}
+      <Home/>
     </Container>
   );
 }
