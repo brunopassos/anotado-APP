@@ -17,6 +17,7 @@ import {
   Archivo_500Medium,
   Archivo_600SemiBold
 } from "@expo-google-fonts/archivo"
+import { Login } from "./src/screens/Login";
 
 
 export default function App() {
@@ -42,7 +43,8 @@ export default function App() {
       {/* <Dashboard/> */}
       {/* <AddNote/> */}
       {/* <ViewNote/> */}
-      <Home/>
+      {/* <Home/> */}
+      <Login/>
     </Container>
   );
 }
