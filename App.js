@@ -15,6 +15,7 @@ import {
   Archivo_500Medium,
   Archivo_600SemiBold
 } from "@expo-google-fonts/archivo"
+import { ViewNote } from "./src/screens/ViewNote";
 
 export default function App() {
 
@@ -37,7 +38,8 @@ export default function App() {
   return (
     <Container onLayout={onLayoutRootView}>
       {/* <Dashboard/> */}
-      <AddNote/>
+      {/* <AddNote/> */}
+      <ViewNote/>
     </Container>
   );
 }
