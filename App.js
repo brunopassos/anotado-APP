@@ -8,6 +8,7 @@ import {
 
 
 import { Dashboard } from './src/screens/Dashboard';
+import { AddNote } from "./src/screens/AddNote";
 
 import {
   Archivo_400Regular,
@@ -35,7 +36,8 @@ export default function App() {
 
   return (
     <Container onLayout={onLayoutRootView}>
-      <Dashboard/>
+      {/* <Dashboard/> */}
+      <AddNote/>
     </Container>
   );
 }
