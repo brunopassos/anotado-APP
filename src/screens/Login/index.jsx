@@ -78,7 +78,7 @@ export function Login(){
         .then(_ => handleLogin())
         .then(_ => setIsLoadding(false))
         .then(_ => showSuccessToast())
-        .catch(error => showErrorToast())
+        .catch(_ => showErrorToast())
     }
 
     const saveUserToken = async (token) => {
