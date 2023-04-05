@@ -15,6 +15,7 @@ import {
 } from "./styles";
 
 import LogoutSvg from "../../../assets/logout.svg";
+import { FabButton } from "../../components/FabButton";
 
 
 export function Dashboard(){
@@ -36,6 +37,7 @@ export function Dashboard(){
                     <Note key={note.id} createdAt={note.createdAt} content={note.content} title={note.title} onPress={() => handleViewNote(note)}/>
                 ))}
             </ScrollView>
+            <FabButton/>
         </Container>
     )
 }
