@@ -75,9 +75,12 @@ export function Dashboard(){
             {userNotes.length != 0 ?
             
             <ScrollView showsVerticalScrollIndicator={false}>
-                {userNotes.map((note) => (
-                    <Note key={note.id} createdAt={note.createdAt} content={note.content} title={note.title} onPress={() => handleViewNote(note)}/>
-                ))}
+                {userNotes.map((note) => {
+                    let date = new Date(note.createdAt);
+                    let dateFormated = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+                    return <Note key={note.id} createdAt={dateFormated} content={note.content} title={note.title} onPress={() => handleViewNote(note)}
+                    />
+                })}
             </ScrollView>
 
             :
