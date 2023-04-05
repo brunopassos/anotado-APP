@@ -19,7 +19,7 @@ export const Header = styled.View`
 `
 
 
-export const LogoutButton = styled.View`
+export const LogoutButton = styled.TouchableOpacity`
     width: 100%;
     height: 50px;
     align-items: flex-end;

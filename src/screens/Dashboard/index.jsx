@@ -1,8 +1,11 @@
 import { ScrollView } from "react-native";
+import { useContext } from "react";
 
 import { Note } from "../../components/Note";
 
 import { notas } from "../../DB";
+
+import { AuthContext } from "../../context/auth";
 
 import {
     Container,
@@ -19,10 +22,13 @@ import { FabButton } from "../../components/FabButton";
 
 
 export function Dashboard(){
+
+    const { handleLogout } = useContext(AuthContext);
+
     return(
         <Container>
             <Header>
-                <LogoutButton>
+                <LogoutButton activeOpacity={.3} onPress={handleLogout}>
                     <LogoutSvg width={40} height={40}/>
                 </LogoutButton>
                 <ScreenTitle>Minhas Anotações</ScreenTitle>
