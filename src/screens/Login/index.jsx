@@ -17,7 +17,7 @@ import {
     InputText,
 } from "./styles";
 
-export function Login(){
+export function Login({navigation}){
 
     const schema = yup.object({
         email: yup
@@ -49,8 +49,7 @@ export function Login(){
     }
 
     const handleReturnHomeScreen = () => {
-        console.log("voltar");
-        // navigation.navigate("Home");
+        navigation.navigate("Home");
     }
 
 

@@ -17,7 +17,7 @@ import {
     InputText,
 } from "./styles";
 
-export function Register(){
+export function Register({navigation}){
     
     const schema = yup.object({
         email: yup
@@ -54,8 +54,7 @@ export function Register(){
     }
 
     const handleReturnHomeScreen = () => {
-        console.log("retornar");
-        // navigation.navigate("Home");
+        navigation.navigate("Home");
     }
 
     return(
