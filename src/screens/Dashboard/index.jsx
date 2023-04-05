@@ -1,16 +1,15 @@
 import { ScrollView, ActivityIndicator } from "react-native";
-import { useContext, useEffect, useState } from "react";
-
-import { Note } from "../../components/Note";
+import { useContext, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 import { AuthContext } from "../../context/auth";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 import LogoutSvg from "../../../assets/logout.svg";
+
 import { FabButton } from "../../components/FabButton";
-import { Api } from "../../services";
+import { Note } from "../../components/Note";
 
 
 import {
@@ -27,14 +26,32 @@ import {
 
 export function Dashboard(){
 
-    const { handleLogout, isLoadding, getUserNotes, setIsLoadding, userNotes } = useContext(AuthContext);   
+    const navigation = useNavigation();
+
+    const { handleLogout, isLoadding, getUserToken, setIsLoadding, userNotes } = useContext(AuthContext);   
+
+    const handleViewNote = (note) => {
+        handleStoreData(note)
+        navigation.navigate("ViewNote");
+    }
+
+    const handleStoreData = async (note) => {
+        try {
+            await AsyncStorage.setItem('@note_id', note.id)
+            if(note.title){
+                await AsyncStorage.setItem('@note_title', note.title)
+            }else{
+                await AsyncStorage.removeItem('@note_title')
+            }
+            await AsyncStorage.setItem('@note_content', note.content)
+            await AsyncStorage.setItem('@note_createdAt', note.createdAt)
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     useEffect(() => {
-        setIsLoadding(true)
-        const getUserToken = async () => {
-            const TOKEN = await AsyncStorage.getItem("@anotado_userToken")
-            getUserNotes(TOKEN);
-        }
+        setIsLoadding(true)        
         getUserToken();
     },[])
 
