@@ -3,7 +3,7 @@ import { PublicRoutes } from "./public.routes";
 import { NavigationContainer } from '@react-navigation/native';
 
 export function Routes(){
-    const rota = false;
+    const rota = true;
     return(
         <NavigationContainer>
             {rota ?  <PublicRoutes/> : <AuthRoutes/>}      

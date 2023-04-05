@@ -1,12 +1,17 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
+import { ActivityIndicator } from "react-native";
+import { useState } from "react";
+import Toast from 'react-native-toast-message';
 
 import { ErrorText } from "../../components/ErrorText";
 import { Button } from "../../components/Button";
 
 import Logo from "../../../assets/note.svg";
 import { Ionicons } from '@expo/vector-icons';
+
+import { Api } from "../../services";
 
 import {
     Container,
@@ -18,6 +23,25 @@ import {
 } from "./styles";
 
 export function Register({navigation}){
+
+    const showSuccessToast = () => {
+        Toast.show({
+          type: 'success',
+          text1: '🥳',
+          text2: 'Cadastrado com sucesso. Faça o login'
+        });
+      }
+
+    const showErrorToast = () => {
+        setIsLoadding(false);
+        Toast.show({
+          type: 'error',
+          text1: '❌',
+          text2: 'Algo deu errado, tente novamente.'
+        });
+      }
+
+    const [isLoadding, setIsLoadding] = useState(false);
     
     const schema = yup.object({
         email: yup
@@ -44,13 +68,13 @@ export function Register({navigation}){
     });
 
     function onSubmit(data){
-        console.log(data);
-        // setIsLoadding(true)
-        // Api.post("/user", data)
-        // .then((_) => reset())
-        // .then((_) => setIsLoadding(false))
-        // .then((_) => navigation.navigate("Login"))
-        // .catch(error => console.log(error));
+        setIsLoadding(true)
+        Api.post("/user", data)
+        .then((_) => reset())
+        .then((_) => setIsLoadding(false))
+        .then((_) => navigation.navigate("Login"))
+        .then((_) => showSuccessToast())
+        .catch(error => showErrorToast());
     }
 
     const handleReturnHomeScreen = () => {
@@ -66,6 +90,9 @@ export function Register({navigation}){
                 <Logo width={100} height={100}/>
                 <AppName>Registro</AppName>
             </Header>
+            {isLoadding &&
+            <ActivityIndicator size="large" color="#7D91FA" />
+            }
             <Form>
             {errors.email && <ErrorText error={errors.email.message}/>}
                 <Controller
