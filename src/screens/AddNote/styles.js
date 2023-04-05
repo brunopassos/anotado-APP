@@ -42,12 +42,3 @@ export const Input = styled.TextInput`
     padding: 10px;
     font-family: "Archivo_400Regular";
 `
-
-export const Date = styled.Text`
-    width: 75%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    font-size: ${RFValue(12)}px;
-    font-family: "Archivo_400Regular";
-    opacity: .6;
-`
