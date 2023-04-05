@@ -12,6 +12,9 @@ import Toast from 'react-native-toast-message';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { Api } from "../../services";
+import { AuthContext } from "../../context/auth";
+
 import {
     Container,
     BackButton,
@@ -21,13 +24,10 @@ import {
     Input,
     Date
 } from "./styles";
-import { Api } from "../../services";
-import { AuthContext } from "../../context/auth";
-
 
 export function AddNote(){
 
-    const { getUserNotes, userNotes, setUserNotes } = useContext(AuthContext); 
+    const { userNotes, setUserNotes } = useContext(AuthContext); 
 
     const showErrorContentFieldToast = () => {
         Toast.show({
@@ -44,9 +44,8 @@ export function AddNote(){
 
     const {
         control,
-        handleSubmit,
-        formState: { errors },
-      } = useForm({});
+        handleSubmit
+    } = useForm();
 
     const handleAddNote = async (data) => {
 
@@ -72,8 +71,6 @@ export function AddNote(){
         }
     }
 
-
-
     const handleReturnDashboard = () => {
         navigation.navigate("Dashboard");
     }
@@ -89,7 +86,7 @@ export function AddNote(){
             </Header>
 
             <FormView>
-            <Controller 
+                <Controller 
                     control={control}
                     name="title"
                     render={({field: {onChange}}) => (
