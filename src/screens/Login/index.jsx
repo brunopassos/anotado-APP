@@ -3,6 +3,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Logo from "../../../assets/note.svg";
 import { Ionicons } from '@expo/vector-icons';
@@ -73,11 +74,15 @@ export function Login(){
     function onSubmit(data){
         setIsLoadding(true)
         Api.post("/user/login", data)
-        // .then(res => getUserTokenFromAsyncStorage(res.data))
+        .then(res => saveUserToken(res.data))
         .then(_ => handleLogin())
         .then(_ => setIsLoadding(false))
         .then(_ => showSuccessToast())
         .catch(error => showErrorToast())
+    }
+
+    const saveUserToken = async (token) => {
+        await AsyncStorage.setItem("@anotado_userToken", token);
     }
 
     const handleReturnHomeScreen = () => {
