@@ -1,12 +1,22 @@
-import Logo from "../../../assets/note.svg";
-import { Ionicons } from '@expo/vector-icons';
-
+import { useState, useContext } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
+import Toast from 'react-native-toast-message';
+
+import Logo from "../../../assets/note.svg";
+import { Ionicons } from '@expo/vector-icons';
+
+import { ActivityIndicator } from "react-native";
 
 import { Button } from "../../components/Button";
 import { ErrorText } from "../../components/ErrorText";
+
+import { Api } from "../../services";
+
+import { useNavigation } from "@react-navigation/native";
+
+import { AuthContext } from "../../context/auth";
 
 import {
     Container,
@@ -17,7 +27,30 @@ import {
     InputText,
 } from "./styles";
 
-export function Login({navigation}){
+export function Login(){
+
+    const showSuccessToast = () => {
+        Toast.show({
+          type: 'success',
+          text1: '🥳',
+          text2: 'Seja bem vindo(a).'
+        });
+    }
+
+    const showErrorToast = () => {
+        setIsLoadding(false);
+        Toast.show({
+          type: 'error',
+          text1: '❌',
+          text2: 'Usuário ou senha inválidos.'
+        });
+    }
+
+    const { handleLogin } = useContext(AuthContext);
+
+    const navigation = useNavigation();
+
+    const [isLoadding, setIsLoadding] = useState(false);
 
     const schema = yup.object({
         email: yup
@@ -38,21 +71,18 @@ export function Login({navigation}){
     });
 
     function onSubmit(data){
-
-        console.log(data);
-        // setIsLoadding(true)
-        // Api.post("/user/login", data)
+        setIsLoadding(true)
+        Api.post("/user/login", data)
         // .then(res => getUserTokenFromAsyncStorage(res.data))
-        // .then(_ => handleLoginLogout())
-        // .then(_ => setIsLoadding(false))
-        // .catch(error => console.error(error))
+        .then(_ => handleLogin())
+        .then(_ => setIsLoadding(false))
+        .then(_ => showSuccessToast())
+        .catch(error => showErrorToast())
     }
 
     const handleReturnHomeScreen = () => {
         navigation.navigate("Home");
     }
-
-
 
     return (
         <Container>
@@ -63,6 +93,9 @@ export function Login({navigation}){
                 <Logo width={100} height={100}/>
                 <AppName>Login</AppName>
             </Header>
+            {isLoadding &&
+            <ActivityIndicator size="large" color="#7D91FA" />
+            }
             <Form>
                 {errors.email && <ErrorText error={errors.email.message}/>}
                 <Controller

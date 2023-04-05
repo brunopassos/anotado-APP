@@ -30,7 +30,7 @@ export function Register({navigation}){
           text1: '🥳',
           text2: 'Cadastrado com sucesso. Faça o login'
         });
-      }
+    }
 
     const showErrorToast = () => {
         setIsLoadding(false);
@@ -39,7 +39,7 @@ export function Register({navigation}){
           text1: '❌',
           text2: 'Algo deu errado, tente novamente.'
         });
-      }
+    }
 
     const [isLoadding, setIsLoadding] = useState(false);
     

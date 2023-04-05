@@ -6,6 +6,8 @@ import Toast from 'react-native-toast-message';
 
 import { Routes } from "./src/routes";
 
+import AuthProvider from './src/context/auth';
+
 import {
   Archivo_400Regular,
   Archivo_500Medium,
@@ -36,8 +38,10 @@ export default function App() {
 
   return (
     <Container  onLayout={onLayoutRootView}>
-      <Routes/>
-      <Toast/>
+      <AuthProvider>
+        <Routes/>
+        <Toast/>
+      </AuthProvider>
     </Container>
   );
 }
