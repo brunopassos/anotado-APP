@@ -1,10 +1,5 @@
 import Logo from "../../../assets/note.svg";
 
-
-
-
-
-
 import {
     Container,
     Header,

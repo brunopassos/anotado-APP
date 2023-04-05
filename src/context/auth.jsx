@@ -1,10 +1,15 @@
 import { createContext, useState } from "react";
+import { Api } from "../services";
 
 export const AuthContext = createContext();
 
 function AuthProvider({ children }) {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [userNotes, setUserNotes] = useState([]);
+
+  const [isLoadding, setIsLoadding] = useState(false);
 
   const handleLogin = async () => {
     setIsLoggedIn(!isLoggedIn);
@@ -14,12 +19,28 @@ function AuthProvider({ children }) {
     setIsLoggedIn(!isLoggedIn);
   }
 
+  const getUserNotes = async (TOKEN) => {
+    setIsLoadding(false);
+    Api.get("/user/notes/me", {
+        headers: {
+            "Authorization" : `Bearer ${TOKEN}`
+        }
+    })
+    .then((res) => setUserNotes(res.data))
+    .catch( err => console.error(err));
+}
+
   return (
     <AuthContext.Provider
       value={{
         handleLogin,
         handleLogout,
-        isLoggedIn,        
+        isLoggedIn, 
+        isLoadding,
+        setIsLoadding,
+        getUserNotes,
+        userNotes,
+        setUserNotes    
       }}
     >
       {children}

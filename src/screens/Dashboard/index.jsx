@@ -3,11 +3,15 @@ import { useContext, useEffect, useState } from "react";
 
 import { Note } from "../../components/Note";
 
-import { notas } from "../../DB";
-
 import { AuthContext } from "../../context/auth";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+import LogoutSvg from "../../../assets/logout.svg";
+import { FabButton } from "../../components/FabButton";
+import { Api } from "../../services";
+
 
 import {
     Container,
@@ -21,30 +25,9 @@ import {
     NoContentText
 } from "./styles";
 
-import LogoutSvg from "../../../assets/logout.svg";
-import { FabButton } from "../../components/FabButton";
-import { Api } from "../../services";
-
-
 export function Dashboard(){
 
-    const { handleLogout } = useContext(AuthContext);
-
-    const [isLoadding, setIsLoadding] = useState(false);
-
-    const [userNotes, setUserNotes] = useState([]);
-
-    const getUserNotes = async (TOKEN) => {
-        setIsLoadding(false);
-        Api.get("/user/notes/me", {
-            headers: {
-                "Authorization" : `Bearer ${TOKEN}`
-            }
-        })
-        // .then((res) => setUserNotes(res.data))
-        .then((res) => setUserNotes(res.data))
-        .catch( err => console.error(err));
-    }
+    const { handleLogout, isLoadding, getUserNotes, setIsLoadding, userNotes } = useContext(AuthContext);   
 
     useEffect(() => {
         setIsLoadding(true)
@@ -52,7 +35,6 @@ export function Dashboard(){
             const TOKEN = await AsyncStorage.getItem("@anotado_userToken")
             getUserNotes(TOKEN);
         }
-
         getUserToken();
     },[])
 

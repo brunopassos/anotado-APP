@@ -12,7 +12,7 @@ export function Routes(){
     
     return(
         <NavigationContainer>
-            {isLoggedIn ?  <PublicRoutes/> : <AuthRoutes/>}      
+            {isLoggedIn ? <AuthRoutes/> : <PublicRoutes/>}      
         </NavigationContainer>
     )
 }
