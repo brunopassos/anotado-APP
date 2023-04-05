@@ -7,10 +7,9 @@ import {
     Content
 } from "./styles";
 
-export function Note({content, createdAt, title, onPress}){
 
-    
-   
+export function Note({content, createdAt, title, onPress}){
+     
     return(
         <Container style={style.container} onPress={onPress}>
             {title && 
