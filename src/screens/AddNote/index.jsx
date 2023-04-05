@@ -4,6 +4,8 @@ import { Ionicons} from "@expo/vector-icons";
 
 import { Button } from "../../components/Button";
 
+import { useNavigation } from "@react-navigation/native";
+
 import {
     Container,
     BackButton,
@@ -16,6 +18,8 @@ import {
 
 
 export function AddNote(){
+
+    const navigation = useNavigation();
 
     const { control, handleSubmit, formState: { errors} } = useForm({});
 
@@ -36,7 +40,7 @@ export function AddNote(){
     }
 
     const handleReturnDashboard = () => {
-        console.log("return")
+        navigation.navigate("Dashboard");
     }
 
 

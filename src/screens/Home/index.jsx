@@ -1,15 +1,8 @@
 import Logo from "../../../assets/note.svg";
 
-import { useFonts } from "expo-font";
-import * as SplashScreen from 'expo-splash-screen';
-import { useCallback } from 'react';
 
 
-import {
-  Archivo_400Regular,
-  Archivo_500Medium,
-  Archivo_600SemiBold
-} from "@expo-google-fonts/archivo"
+
 
 
 import {
@@ -23,31 +16,14 @@ import {
     RegisterText
 } from "./styles";
 
+
 export function Home({navigation}){
 
-    const [fontsLoaded] = useFonts({
-        Archivo_400Regular,
-        Archivo_500Medium,
-        Archivo_600SemiBold
-      });
-    
-      const onLayoutRootView = useCallback(async () => {
-        if (fontsLoaded) {
-          await SplashScreen.hideAsync();
-        }
-      }, [fontsLoaded]);
-    
-      if (!fontsLoaded) {
-        return null;
-      }
-
     const handleGoToLoginScreen = () => {
-        console.log("login");
         navigation.navigate("Login");
     }
 
     const handleGoToRegisterScreen = () => {
-        console.log("register");
         navigation.navigate("Register");
     }
 

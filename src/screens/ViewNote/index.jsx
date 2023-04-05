@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { Dimensions } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 
@@ -14,6 +15,8 @@ import {
 } from "./styles";
 
 export function ViewNote(){
+
+    const navigation = useNavigation();
 
     const windowHeigth = Dimensions.get("window").height / 2.2;
 
@@ -31,7 +34,7 @@ export function ViewNote(){
     }
 
     const handleReturnDashboard = () => {
-        console.log("return");
+        navigation.navigate("Dashboard");
     }
 
     const handleEdit = () => {
