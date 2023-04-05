@@ -56,3 +56,12 @@ export const TextFilter = styled.TextInput`
     padding-left: 15px;
 `
 
+export const NoContentView = styled.View`
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+`
+
+export const NoContentText = styled.Text`
+    opacity: .5;
+`
