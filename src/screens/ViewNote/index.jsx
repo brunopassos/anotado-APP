@@ -1,10 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Dimensions, ActivityIndicator } from "react-native";
+import { Dimensions, ActivityIndicator, View } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Api } from "../../services";
 import { AuthContext } from "../../context/auth";
+import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "../../components/Button";
 
@@ -18,9 +19,9 @@ import {
 } from "./styles";
 
 
-export function ViewNote(){
+export function ViewNote() {
 
-    const { getUserToken } = useContext(AuthContext);   
+    const { getUserToken } = useContext(AuthContext);
 
     const navigation = useNavigation();
 
@@ -37,6 +38,11 @@ export function ViewNote(){
 
     const [isLoadding, setIsLoadding] = useState(false);
 
+    const {
+        control,
+        handleSubmit
+    } = useForm();
+
     const handleGetNoteDataFromStorage = async () => {
         try {
             const noteId = await AsyncStorage.getItem('@note_id');
@@ -50,7 +56,7 @@ export function ViewNote(){
         } catch (error) {
             console.log("error")
         }
-    }   
+    }
 
     const handleChangeButtonVisible = () => {
         setButtonVisible(true);
@@ -68,56 +74,72 @@ export function ViewNote(){
     }
 
     const handleEdit = (data) => {
-        console.log(data);
-
-        // setIsLoadding(true);
-        // Api.patch(`/note/${noteId}`)
-        // .then(_ => setIsLoadding(false))
-        // .then(_ => handleReturnDashboard())
-        // .catch((error) => console.error(error))
-    }
-
-    const handleDelete = () => {
         setIsLoadding(true);
-        Api.delete(`/note/${noteId}`)
+        Api.patch(`/note/${noteId}`, data)
         .then(_ => setIsLoadding(false))
         .then(_ => handleReturnDashboard())
         .catch((error) => console.error(error))
     }
 
+    const handleDelete = () => {
+        setIsLoadding(true);
+        Api.delete(`/note/${noteId}`)
+            .then(_ => setIsLoadding(false))
+            .then(_ => handleReturnDashboard())
+            .catch((error) => console.error(error))
+    }
+
     useEffect(() => {
         handleGetNoteDataFromStorage();
-    },[])
+    }, [])
 
-    return(
+    return (
         <Container>
             {isLoadding &&
-            <ActivityIndicator size="large" color="#7D91FA" />
+                <ActivityIndicator size="large" color="#7D91FA" />
             }
             <BackButton activeOpacity={.7} onPress={handleReturnDashboard}>
-                <Ionicons name="chevron-back" size={24} color="black"/>
+                <Ionicons name="chevron-back" size={24} color="black" />
             </BackButton>
-            <TitleInput 
-                textAlignVertical={"center"}
-                onFocus={handleChangeButtonVisible}
-                inputBackground={inputBackground}
-                defaultValue={noteTitle}
-            />
-            <DateText>{noteCreatedAt}</DateText>
-            <CotentInput
-                defaultValue={noteContent}
-                textAlignVertical={"top"}
-                style={{height: windowHeigth}}
-                multiline={true}
-                numberOfLines={20}
-                maxLength={100000}
-                onFocus={handleChangeButtonVisible}
-                inputBackground={inputBackground}
+
+            <Controller
+                control={control}
+                name="title"
+                render={({ field: { onChange } }) => (
+                    <TitleInput
+                        textAlignVertical={"center"}
+                        onFocus={handleChangeButtonVisible}
+                        inputBackground={inputBackground}
+                        defaultValue={noteTitle}
+                        onChangeText={onChange}
+                    />
+                )}
             />
 
-            {buttonVisible && 
+            <DateText>{noteCreatedAt}</DateText>
+
+            <Controller
+                control={control}
+                name="content"
+                render={({ field: { onChange } }) => (
+                    <CotentInput
+                        defaultValue={noteContent}
+                        textAlignVertical={"top"}
+                        style={{ height: windowHeigth }}
+                        multiline={true}
+                        numberOfLines={20}
+                        maxLength={100000}
+                        onFocus={handleChangeButtonVisible}
+                        inputBackground={inputBackground}
+                        onChangeText={onChange}
+                    />
+                )}
+            />
+
+
+            {buttonVisible &&
                 <ButtonView>
-                    <Button activeOpacity={.7} color="default" size="edit" onPress={() => handleEdit()}>
+                    <Button activeOpacity={.7} color="default" size="edit" onPress={handleSubmit(handleEdit)}>
                         Atualizar
                     </Button>
                     <Button activeOpacity={.7} color="delete" size="delete" onPress={() => handleDelete()}>
