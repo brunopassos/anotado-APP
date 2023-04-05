@@ -22,7 +22,6 @@ import {
     ScreenTitle,
     FormView,
     Input,
-    Date
 } from "./styles";
 
 export function AddNote(){
@@ -97,7 +96,6 @@ export function AddNote(){
                         />
                     )}
                 />
-                <Date>20 de Janeiro - 17:03</Date>
                 <Controller 
                     control={control}
                     name="content"

@@ -1,5 +1,5 @@
 import { ScrollView, ActivityIndicator } from "react-native";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import { AuthContext } from "../../context/auth";
@@ -25,6 +25,10 @@ import {
 } from "./styles";
 
 export function Dashboard(){
+
+    const [search, setSearch] = useState("");
+
+    const [filteredNotes, setFilteredNotes] = useState([]);
 
     const navigation = useNavigation();
 
@@ -55,6 +59,20 @@ export function Dashboard(){
         getUserToken();
     },[])
 
+    const handleFilterNotes = (e) => {
+        const filtered = userNotes.filter((item) => {
+          const title = item.title || '';
+          const content = item.content || '';
+      
+          return (
+            title.toLowerCase().includes(e.toLowerCase()) || 
+            content.toLowerCase().includes(e.toLowerCase())
+          );
+        });
+      
+        setFilteredNotes(filtered);
+      }
+
     return(
         <Container>
             <Header>
@@ -62,9 +80,13 @@ export function Dashboard(){
                     <LogoutSvg width={40} height={40}/>
                 </LogoutButton>
                 <ScreenTitle>Minhas Anotações</ScreenTitle>
-                <NotesNumber>{userNotes.length} notas</NotesNumber>
+                <NotesNumber>
+                    {
+                        filteredNotes.length === 0 ? userNotes.length : filteredNotes.length
+                    } nota(s)
+                </NotesNumber>
                 <FilterView>
-                    <TextFilter/>
+                    <TextFilter placeholder="Filtro" onChangeText={(e) => handleFilterNotes(e)}/>
                 </FilterView>
             </Header>
 
@@ -75,12 +97,26 @@ export function Dashboard(){
             {userNotes.length != 0 ?
             
             <ScrollView showsVerticalScrollIndicator={false}>
-                {userNotes.map((note) => {
+
+                {
+                
+                filteredNotes.length === 0 ? 
+                
+                userNotes.map((note) => {
                     let date = new Date(note.createdAt);
                     let dateFormated = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
                     return <Note key={note.id} createdAt={dateFormated} content={note.content} title={note.title} onPress={() => handleViewNote(note)}
                     />
-                })}
+                })
+
+                :
+                filteredNotes.map((note) => {
+                    let date = new Date(note.createdAt);
+                    let dateFormated = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+                    return <Note key={note.id} createdAt={dateFormated} content={note.content} title={note.title} onPress={() => handleViewNote(note)}
+                    />
+                })
+                }
             </ScrollView>
 
             :
