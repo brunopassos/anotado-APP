@@ -2,6 +2,8 @@ import { useCallback } from 'react';
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
 
+import Toast from 'react-native-toast-message';
+
 import { Routes } from "./src/routes";
 
 import {
@@ -35,6 +37,7 @@ export default function App() {
   return (
     <Container  onLayout={onLayoutRootView}>
       <Routes/>
+      <Toast/>
     </Container>
   );
 }
