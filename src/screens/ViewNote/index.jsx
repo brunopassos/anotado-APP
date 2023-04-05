@@ -2,10 +2,11 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Dimensions, ActivityIndicator, View } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Api } from "../../services";
 import { AuthContext } from "../../context/auth";
 import { Controller, useForm } from "react-hook-form";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 import { Button } from "../../components/Button";
 
@@ -20,6 +21,22 @@ import {
 
 
 export function ViewNote() {
+
+    const showSuccessDeleteToast = () => {
+        Toast.show({
+          type: 'success',
+          text2: 'Nota deletada com sucesso'
+        });
+    }
+
+    const showErrorDeleteToast = () => {
+        setIsLoadding(false);
+        Toast.show({
+          type: 'error',
+          text1: '❌',
+          text2: 'Algo deu errado. Tente novamente.'
+        });
+    }
 
     const { getUserToken } = useContext(AuthContext);
 
@@ -86,7 +103,8 @@ export function ViewNote() {
         Api.delete(`/note/${noteId}`)
             .then(_ => setIsLoadding(false))
             .then(_ => handleReturnDashboard())
-            .catch((error) => console.error(error))
+            .then(_ => showSuccessDeleteToast())
+            .catch((_) => showErrorDeleteToast())
     }
 
     useEffect(() => {
@@ -116,7 +134,7 @@ export function ViewNote() {
                 )}
             />
 
-            <DateText>{noteCreatedAt}</DateText>
+            <DateText>Criada em {noteCreatedAt}</DateText>
 
             <Controller
                 control={control}

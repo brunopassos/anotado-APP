@@ -1,16 +1,16 @@
 import { ScrollView, ActivityIndicator } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-
 import { AuthContext } from "../../context/auth";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Toast from 'react-native-toast-message';
 import LogoutSvg from "../../../assets/logout.svg";
 
 import { FabButton } from "../../components/FabButton";
 import { Note } from "../../components/Note";
 
+let dateFormated;
 
 import {
     Container,
@@ -26,7 +26,18 @@ import {
 
 export function Dashboard(){
 
-    const [search, setSearch] = useState("");
+    const showSuccessLogoutToast = () => {
+        Toast.show({
+          type: 'success',
+          text1: '👋',
+          text2: 'Até breve.'
+        });
+    }
+
+    const userLogout = () => {
+        handleLogout();
+        showSuccessLogoutToast();
+    }
 
     const [filteredNotes, setFilteredNotes] = useState([]);
 
@@ -35,7 +46,7 @@ export function Dashboard(){
     const { handleLogout, isLoadding, getUserToken, setIsLoadding, userNotes } = useContext(AuthContext);   
 
     const handleViewNote = (note) => {
-        handleStoreData(note)
+        handleStoreData(note, dateFormated)
         navigation.navigate("ViewNote");
     }
 
@@ -48,7 +59,7 @@ export function Dashboard(){
                 await AsyncStorage.removeItem('@note_title')
             }
             await AsyncStorage.setItem('@note_content', note.content)
-            await AsyncStorage.setItem('@note_createdAt', note.createdAt)
+            await AsyncStorage.setItem('@note_createdAt', dateFormated)
         } catch (e) {
             console.log(e)
         }
@@ -76,7 +87,7 @@ export function Dashboard(){
     return(
         <Container>
             <Header>
-                <LogoutButton activeOpacity={.3} onPress={handleLogout}>
+                <LogoutButton activeOpacity={.3} onPress={userLogout}>
                     <LogoutSvg width={40} height={40}/>
                 </LogoutButton>
                 <ScreenTitle>Minhas Anotações</ScreenTitle>
@@ -104,8 +115,8 @@ export function Dashboard(){
                 
                 userNotes.map((note) => {
                     let date = new Date(note.createdAt);
-                    let dateFormated = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
-                    return <Note key={note.id} createdAt={dateFormated} content={note.content} title={note.title} onPress={() => handleViewNote(note)}
+                    dateFormated = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+                    return <Note key={note.id} createdAt={dateFormated} content={note.content} title={note.title} onPress={() => handleViewNote(note, dateFormated)}
                     />
                 })
 
