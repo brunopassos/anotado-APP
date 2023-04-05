@@ -8,6 +8,8 @@ import {
 } from "./styles";
 
 export function Note({content, createdAt, title, onPress}){
+
+    
    
     return(
         <Container style={style.container} onPress={onPress}>

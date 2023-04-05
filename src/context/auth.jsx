@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import { Api } from "../services";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthContext = createContext();
 
@@ -18,6 +19,11 @@ function AuthProvider({ children }) {
   const handleLogout = async () => {
     setIsLoggedIn(!isLoggedIn);
   }
+
+  const getUserToken = async () => {
+    const TOKEN = await AsyncStorage.getItem("@anotado_userToken")
+    getUserNotes(TOKEN);
+}
 
   const getUserNotes = async (TOKEN) => {
     setIsLoadding(false);
@@ -40,7 +46,8 @@ function AuthProvider({ children }) {
         setIsLoadding,
         getUserNotes,
         userNotes,
-        setUserNotes    
+        setUserNotes,
+        getUserToken 
       }}
     >
       {children}

@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Dimensions } from "react-native";
+import { Dimensions, ActivityIndicator } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Api } from "../../services";
+import { AuthContext } from "../../context/auth";
 
 import { Button } from "../../components/Button";
 
@@ -14,7 +17,10 @@ import {
     ButtonView
 } from "./styles";
 
+
 export function ViewNote(){
+
+    const { getUserToken } = useContext(AuthContext);   
 
     const navigation = useNavigation();
 
@@ -22,7 +28,29 @@ export function ViewNote(){
 
     const [buttonVisible, setButtonVisible] = useState(false);
 
+    const [noteId, setNoteId] = useState("");
+    const [noteTitle, setNoteTitle] = useState("");
+    const [noteContent, setNoteContent] = useState("");
+    const [noteCreatedAt, setNoteCreatedAt] = useState("");
+
     const [inputBackground, setInputBackground] = useState(false);
+
+    const [isLoadding, setIsLoadding] = useState(false);
+
+    const handleGetNoteDataFromStorage = async () => {
+        try {
+            const noteId = await AsyncStorage.getItem('@note_id');
+            setNoteId(noteId);
+            const noteTitle = await AsyncStorage.getItem('@note_title');
+            setNoteTitle(noteTitle);
+            const noteContent = await AsyncStorage.getItem('@note_content');
+            setNoteContent(noteContent);
+            const noteCreatedAt = await AsyncStorage.getItem('@note_createdAt');
+            setNoteCreatedAt(noteCreatedAt);
+        } catch (error) {
+            console.log("error")
+        }
+    }   
 
     const handleChangeButtonVisible = () => {
         setButtonVisible(true);
@@ -35,18 +63,37 @@ export function ViewNote(){
 
     const handleReturnDashboard = () => {
         navigation.navigate("Dashboard");
+        getUserToken();
+
     }
 
-    const handleEdit = () => {
-        console.log("editado")
+    const handleEdit = (data) => {
+        console.log(data);
+
+        // setIsLoadding(true);
+        // Api.patch(`/note/${noteId}`)
+        // .then(_ => setIsLoadding(false))
+        // .then(_ => handleReturnDashboard())
+        // .catch((error) => console.error(error))
     }
 
     const handleDelete = () => {
-        console.log("deletado")
+        setIsLoadding(true);
+        Api.delete(`/note/${noteId}`)
+        .then(_ => setIsLoadding(false))
+        .then(_ => handleReturnDashboard())
+        .catch((error) => console.error(error))
     }
+
+    useEffect(() => {
+        handleGetNoteDataFromStorage();
+    },[])
 
     return(
         <Container>
+            {isLoadding &&
+            <ActivityIndicator size="large" color="#7D91FA" />
+            }
             <BackButton activeOpacity={.7} onPress={handleReturnDashboard}>
                 <Ionicons name="chevron-back" size={24} color="black"/>
             </BackButton>
@@ -54,11 +101,11 @@ export function ViewNote(){
                 textAlignVertical={"center"}
                 onFocus={handleChangeButtonVisible}
                 inputBackground={inputBackground}
-                defaultValue="titulo teste"
+                defaultValue={noteTitle}
             />
-            <DateText>Data</DateText>
+            <DateText>{noteCreatedAt}</DateText>
             <CotentInput
-                defaultValue="conteúdo teste"
+                defaultValue={noteContent}
                 textAlignVertical={"top"}
                 style={{height: windowHeigth}}
                 multiline={true}
