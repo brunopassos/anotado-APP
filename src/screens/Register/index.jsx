@@ -32,13 +32,21 @@ export function Register({navigation}){
         });
     }
 
-    const showErrorToast = () => {
+    const showErrorToast = (err) => {
+        if(err.response.data.statusCode = 409){
+            Toast.show({
+                type: 'error',
+                text1: '❌',
+                text2: 'Email já cadastrado.'
+              });
+        }else{
+            Toast.show({
+              type: 'error',
+              text1: '❌',
+              text2: 'Algo deu errado, tente novamente.'
+            });
+        }
         setIsLoadding(false);
-        Toast.show({
-          type: 'error',
-          text1: '❌',
-          text2: 'Algo deu errado, tente novamente.'
-        });
     }
 
     const [isLoadding, setIsLoadding] = useState(false);
@@ -74,7 +82,7 @@ export function Register({navigation}){
         .then((_) => setIsLoadding(false))
         .then((_) => navigation.navigate("Login"))
         .then((_) => showSuccessToast())
-        .catch(error => showErrorToast());
+        .catch(error => showErrorToast(error));
     }
 
     const handleReturnHomeScreen = () => {
