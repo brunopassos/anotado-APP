@@ -47,12 +47,11 @@ export function AddNote(){
     } = useForm();
 
     const handleAddNote = async (data) => {
+        setIsLoadding(true);
 
         checkFields(data);
 
         const TOKEN = await AsyncStorage.getItem("@anotado_userToken");
-
-        setIsLoadding(true);
 
         Api.post("/note", data, {
             headers: {
