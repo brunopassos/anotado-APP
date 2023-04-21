@@ -32,12 +32,6 @@ export const ScreenTitle = styled.Text`
     font-family: "Archivo_600SemiBold";
 `
 
-
-export const NotesNumber = styled.Text`
-    font-size: ${RFValue(15)}px;
-    font-family: "Archivo_400Regular";
-`
-
 export const FilterView = styled.View`
     width: 100%;
     height: ${RFValue(90)}px;

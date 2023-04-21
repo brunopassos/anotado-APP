@@ -17,7 +17,6 @@ import {
     Header,
     LogoutButton,
     ScreenTitle,
-    NotesNumber,
     FilterView,
     TextFilter,
     NoContentView,
@@ -39,7 +38,7 @@ export function Dashboard(){
         showSuccessLogoutToast();
     }
 
-    const [filteredNotes, setFilteredNotes] = useState([]);
+    const [search, setSearch] = useState("");
 
     const navigation = useNavigation();
 
@@ -70,34 +69,19 @@ export function Dashboard(){
         getUserToken();
     },[])
 
-    const handleFilterNotes = (e) => {
-        const filtered = userNotes.filter((item) => {
-          const title = item.title || '';
-          const content = item.content || '';
-      
-          return (
-            title.toLowerCase().includes(e.toLowerCase()) || 
-            content.toLowerCase().includes(e.toLowerCase())
-          );
-        });
-      
-        setFilteredNotes(filtered);
-      }
 
     return(
-        <Container>
+        
+            !isLoadding &&
+            
+            <Container>
             <Header>
                 <LogoutButton activeOpacity={.3} onPress={userLogout}>
                     <LogoutSvg width={40} height={40}/>
                 </LogoutButton>
                 <ScreenTitle>Minhas Anotações</ScreenTitle>
-                <NotesNumber>
-                    {
-                        filteredNotes.length === 0 ? userNotes.length : filteredNotes.length
-                    } nota(s)
-                </NotesNumber>
                 <FilterView>
-                    <TextFilter placeholder="Filtro" onChangeText={(e) => handleFilterNotes(e)}/>
+                    <TextFilter placeholder="Filtro" onChangeText={setSearch}/>
                 </FilterView>
             </Header>
 
@@ -110,24 +94,19 @@ export function Dashboard(){
             <ScrollView showsVerticalScrollIndicator={false}>
 
                 {
-                
-                filteredNotes.length === 0 ? 
-                
-                userNotes.map((note) => {
-                    let date = new Date(note.createdAt);
-                    dateFormated = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
-                    return <Note key={note.id} createdAt={dateFormated} content={note.content} title={note.title} onPress={() => handleViewNote(note, dateFormated)}
-                    />
-                })
-
-                :
-                filteredNotes.map((note) => {
-                    let date = new Date(note.createdAt);
-                    let dateFormated = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
-                    return <Note key={note.id} createdAt={dateFormated} content={note.content} title={note.title} onPress={() => handleViewNote(note)}
-                    />
-                })
+                    userNotes.filter((note) => {
+                        if(search === ""){
+                            return note
+                        } else if(note.content.toLowerCase().includes(search.toLowerCase())){
+                            return note
+                        }
+                    }).map((note) => {
+                        let date = new Date(note.createdAt);
+                        dateFormated = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
+                        return <Note key={note.id} createdAt={dateFormated} content={note.content} title={note.title} onPress={() => handleViewNote(note, dateFormated)}/>
+                    })
                 }
+
             </ScrollView>
 
             :
@@ -142,5 +121,8 @@ export function Dashboard(){
 
             <FabButton/>
         </Container>
+
+        
+        
     )
 }

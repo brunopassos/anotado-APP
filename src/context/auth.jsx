@@ -23,16 +23,16 @@ function AuthProvider({ children }) {
   const getUserToken = async () => {
     const TOKEN = await AsyncStorage.getItem("@anotado_userToken")
     getUserNotes(TOKEN);
-}
+  }
 
   const getUserNotes = async (TOKEN) => {
-    setIsLoadding(false);
     Api.get("/user/notes/me", {
         headers: {
             "Authorization" : `Bearer ${TOKEN}`
         }
     })
     .then((res) => setUserNotes(res.data))
+    .then(_ => setIsLoadding(false))
     .catch( err => console.error(err));
 }
 
