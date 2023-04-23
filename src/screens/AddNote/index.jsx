@@ -52,15 +52,16 @@ export function AddNote(){
         checkFields(data);
 
         const TOKEN = await AsyncStorage.getItem("@anotado_userToken");
+        const objToken = JSON.parse(TOKEN);
 
         Api.post("/note", data, {
             headers: {
-                "Authorization" : `Bearer ${TOKEN}`
+                "Authorization" : `Bearer ${objToken.token}`
             }
         })
         .then((res) => setUserNotes([...userNotes, res.data]))
         .then((_) => navigation.navigate("Dashboard"))
-        .catch(err => console.error(err));
+        .catch(err => console.error(err.response.data));
     }
 
     const checkFields = (data) => {

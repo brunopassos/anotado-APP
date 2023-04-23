@@ -21,8 +21,9 @@ function AuthProvider({ children }) {
   }
 
   const getUserToken = async () => {
-    const TOKEN = await AsyncStorage.getItem("@anotado_userToken")
-    getUserNotes(TOKEN);
+    const TOKEN = await AsyncStorage.getItem("@anotado_userToken");
+    const objToken = JSON.parse(TOKEN);
+    getUserNotes(objToken.token);
   }
 
   const getUserNotes = async (TOKEN) => {
@@ -33,7 +34,7 @@ function AuthProvider({ children }) {
     })
     .then((res) => setUserNotes(res.data))
     .then(_ => setIsLoadding(false))
-    .catch( err => console.error(err));
+    .catch( err => console.error(err.response.data));
 }
 
   return (

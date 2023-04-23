@@ -38,7 +38,7 @@ export function Login(){
         });
     }
 
-    const showErrorToast = () => {
+    const showErrorToast = (err) => {
         setIsLoadding(false);
         Toast.show({
           type: 'error',
@@ -78,11 +78,11 @@ export function Login(){
         .then(_ => handleLogin())
         .then(_ => setIsLoadding(false))
         .then(_ => showSuccessToast())
-        .catch(_ => showErrorToast())
+        .catch(err => showErrorToast(err))
     }
 
     const saveUserToken = async (token) => {
-        await AsyncStorage.setItem("@anotado_userToken", token);
+        await AsyncStorage.setItem("@anotado_userToken", JSON.stringify(token));
     }
 
     const handleReturnHomeScreen = () => {

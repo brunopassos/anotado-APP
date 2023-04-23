@@ -29,8 +29,9 @@ export function ViewNote() {
         });
     }
 
-    const showErrorDeleteToast = () => {
+    const showErrorDeleteToast = (err) => {
         setIsLoadding(false);
+        console.log(err.response.data)
         Toast.show({
           type: 'error',
           text1: '❌',
@@ -90,21 +91,41 @@ export function ViewNote() {
 
     }
 
-    const handleEdit = (data) => {
+    const handleEdit = async (data, token) => {
         setIsLoadding(true);
-        Api.patch(`/note/${noteId}`, data)
+
+        Api.patch(`/note/${noteId}`, data, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(_ => setIsLoadding(false))
         .then(_ => handleReturnDashboard())
-        .catch((error) => console.error(error))
+        .catch((error) => console.error(error.response.data))
     }
 
-    const handleDelete = () => {
+    const retrieveUserToken = async (data) => {
+        const TOKEN = await AsyncStorage.getItem("@anotado_userToken");
+        const objToken = JSON.parse(TOKEN);
+
+        handleEdit(data, objToken.token)
+    }
+
+    const handleDelete = async () => {
         setIsLoadding(true);
-        Api.delete(`/note/${noteId}`)
+
+        const TOKEN = await AsyncStorage.getItem("@anotado_userToken");
+        const objToken = JSON.parse(TOKEN);
+
+        Api.delete(`/note/${noteId}`, {
+            headers: {
+                Authorization: `Bearer ${objToken.token}`
+            }
+        })
             .then(_ => setIsLoadding(false))
             .then(_ => handleReturnDashboard())
             .then(_ => showSuccessDeleteToast())
-            .catch((_) => showErrorDeleteToast())
+            .catch((err) => showErrorDeleteToast(err))
     }
 
     useEffect(() => {
@@ -157,7 +178,7 @@ export function ViewNote() {
 
             {buttonVisible &&
                 <ButtonView>
-                    <Button activeOpacity={.7} color="default" size="edit" onPress={handleSubmit(handleEdit)}>
+                    <Button activeOpacity={.7} color="default" size="edit" onPress={handleSubmit(retrieveUserToken)}>
                         Atualizar
                     </Button>
                     <Button activeOpacity={.7} color="delete" size="delete" onPress={() => handleDelete()}>
