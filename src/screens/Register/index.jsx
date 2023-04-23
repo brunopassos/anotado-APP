@@ -58,8 +58,9 @@ export function Register({navigation}){
           .required("O email não pode ser vazio."),
         password: yup
           .string()
-          .min(6, "A senha deve ter pelo menos 6 digitos.")
-          .required("A senha não pode ser vazia."),
+          .min(8, "A senha deve ter pelo menos 8 digitos, um número, uma letra maiúcula, uma letra minúscula e um caractere especial.")
+          .required("A senha não pode ser vazia.")
+          .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/),
         confirmPassword: yup
           .string()
           .oneOf([yup.ref("password")], "Senhas não são iguais")
